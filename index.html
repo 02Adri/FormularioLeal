@@ -1,0 +1,40 @@
+<!--Estructura del Formulario de Contactos-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Contactos Con Correo Electronico</title>
+    <link rel="stylesheet" href="http://localhost:8080/FormularioEmail/index.css">
+</head>
+<body>
+      <div class="form-container">
+        <h2>Contacto-Bufete de Abogados LealDíaz</h2>
+        <form  id="contactForm"  method="POST" enctype="multipart/form-data" >
+            <label for="name">Nombre:</label>
+            <input type="text" name="name" id="name" placeholder="Ingresa Tu nombre Completo" required>
+
+            <label for="email">Correo Electrónico:</label>
+            <input type="email" name="email" id="email" placeholder="Ingresa tu correo Electrónico" required>
+
+          <!--<label for="telefono">Número Telefónico:</label>
+            <input type="number" name="telefono" id="telefono" required>-->  
+
+            <label for="subject">Asunto:</label>
+            <input type="text" name="subject" id="subject" placeholder="Motivo del Contacto" required>
+
+            <label for="message"> Mensaje:</label>
+            <textarea name="message" id="message" rows="5" placeholder="Escribe tu mensaje" required></textarea>
+
+            <label for="file"> Adjuntar Archivo</label>
+            <input type="file" name="file" id="file" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg">
+
+            <button type="submit">Enviar</button>
+        </form>
+        <div id="responseMessage"></div>
+    </div>
+      </div>
+    <script src="http://localhost:8080/FormularioEmail/index.js"></script>
+
+</body>
+</html>
