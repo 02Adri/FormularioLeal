@@ -1,3 +1,5 @@
 [build]
-  publish = "."
-  functions = "functions"
+  functions = "functions"  # Ruta donde se encuentran las funciones
+
+[dev]
+  functions = "functions"  # Ruta para la función en el entorno de desarrollo
