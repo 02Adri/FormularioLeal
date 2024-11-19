@@ -34,3 +34,48 @@
     }
 });
 */
+document.getElementById('contactForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+  
+    const form = new FormData(event.target);
+    const fileInput = document.getElementById('file').files[0];
+  
+    const fileData = fileInput
+      ? {
+          name: fileInput.name,
+          type: fileInput.type,
+          content: await toBase64(fileInput),
+        }
+      : null;
+  
+    const formData = {
+      name: form.get('name'),
+      email: form.get('email'),
+      subject: form.get('subject'),
+      message: form.get('message'),
+      file: fileData,
+    };
+  
+    try {
+      const response = await fetch('/.netlify/functions/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+  
+      const result = await response.text();
+      document.getElementById('status').textContent = result;
+    } catch (error) {
+      document.getElementById('status').textContent = 'Error al enviar el formulario.';
+    }
+  });
+  
+  function toBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+  
