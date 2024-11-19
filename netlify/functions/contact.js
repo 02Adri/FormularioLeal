@@ -4,8 +4,8 @@ const nodemailer = require('nodemailer');  // Usamos nodemailer para enviar el c
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,  // Aquí deberías configurar el correo de Google
-    pass: process.env.EMAIL_PASS   // Aquí deberías configurar la contraseña de Google
+    user: "palmabenavidesa650@gmail.com",  // Aquí deberías configurar el correo de Google
+    pass: "Adrian1821"   // Aquí deberías configurar la contraseña de Google
   }
 });
 

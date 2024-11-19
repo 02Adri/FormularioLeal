@@ -1,5 +1,9 @@
 [build]
   functions = "functions"  # Ruta donde se encuentran las funciones
 
-[dev]
-  functions = "functions"  # Ruta para la función en el entorno de desarrollo
+
+[[redirects]]
+  from = "/contact"
+  to = "/.netlify/functions/send-email"
+  status = 200
+  force = true
