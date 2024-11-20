@@ -1,4 +1,4 @@
-const Busboy = require('busboy');  // Importar busboy
+const Busboy =require('busboy');  // Importar busboy
 const nodemailer = require('nodemailer');
 
 export const handler = async (event, context) => {
