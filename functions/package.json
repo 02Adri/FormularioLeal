@@ -1,8 +1,8 @@
 {
-  "name": "formularioemail",
+  "name": "functions",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "contact.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "multiparty": "^4.2.3",
     "nodemailer": "^6.9.16"
   }
 }
