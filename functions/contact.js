@@ -1,8 +1,10 @@
 //const nodemailer = require('nodemailer');
 //const Busboy = require('busboy');
 const { Readable } = require('stream');
-import nodemailer from 'nodemailer'
-import Busboy from 'busboy';
+//import nodemailer from 'nodemailer'
+//import Busboy from 'busboy';
+const nodemailer=require('nodemailer')
+const Busboy=require('busboy')
 // Configurar el transporte de correo con Nodemailer
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -27,7 +29,7 @@ exports.handler = async (event, context) => {
       ? Buffer.from(event.body, 'base64').toString('binary')
       : event.body;
 
-    const busboy = new Busboy({ headers: event.headers });
+    const busboy = new Busboy ({ headers: event.headers });
     const formData = {};
     let fileBuffer;
     let fileName, fileType;
