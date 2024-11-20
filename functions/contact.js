@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
-const Busboy = require('busboy');
+//const Busboy = require('busboy');
 const { Readable } = require('stream');
-
+import Busboy from 'busboy';
 // Configurar el transporte de correo con Nodemailer
 const transporter = nodemailer.createTransport({
   service: 'gmail',
