@@ -1,136 +1,87 @@
-/*const nodemailer = require('nodemailer');  // Usamos nodemailer para enviar el correo
+const nodemailer = require('nodemailer');
+const Busboy = require('busboy');
+const fs = require('fs');
+const path = require('path');
+const util = require('util');
 
-// Configurar el transportador de nodemailer
+// Configurar el transporte de correo con Nodemailer (Asegúrate de poner tu SMTP real)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: "palmabenavidesa650@gmail.com",  // Aquí deberías configurar el correo de Google
-    pass: "Adrian1821"   // Aquí deberías configurar la contraseña de Google
+    user: 'palmabenavidesa650@gmail.com',
+    pass: 'Adrian1821'
   }
 });
 
-exports.handler = async function(event, context) {
-  if (event.httpMethod === 'POST') {
-    try {
-      // Obtener los datos del formulario
-      const { name, email, subject, message, file } = JSON.parse(event.body);
+// Función Netlify
+exports.handler = async (event, context) => {
+  return new Promise((resolve, reject) => {
+    if (event.httpMethod !== 'POST') {
+      return reject({
+        statusCode: 405,
+        body: 'Método no permitido',
+      });
+    }
 
-      // Crear el cuerpo del mensaje
+    const busboy = new Busboy({ headers: event.headers });
+    let formData = {};
+    let fileBuffer;
+    
+    busboy.on('field', (fieldname, val) => {
+      formData[fieldname] = val;
+    });
+
+    busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+      fileBuffer = [];
+      file.on('data', (data) => {
+        fileBuffer.push(data);
+      });
+      file.on('end', () => {
+        formData[fieldname] = Buffer.concat(fileBuffer);
+        formData.fileName = filename;
+        formData.fileType = mimetype;
+      });
+    });
+
+    busboy.on('finish', () => {
+      const { name, email, subject, message, fileName, fileType } = formData;
+
       const mailOptions = {
-        from: email, // El remitente será el correo del usuario
-        to: 'palmabenavidesa650@gmail.com', // El correo al que se enviará
-        subject: subject,
+        from: email, // El correo de quien lo envía
+        to: 'palmabenavidesa650@gmail.com', // Correo del bufete
+        subject: `Nuevo mensaje de contacto: ${subject}`,
         html: `
-          <h2>Nuevo mensaje de contacto</h2>
+          <h2>Nuevo mensaje del formulario de contacto</h2>
           <p><strong>Nombre:</strong> ${name}</p>
           <p><strong>Correo:</strong> ${email}</p>
           <p><strong>Asunto:</strong> ${subject}</p>
           <p><strong>Mensaje:</strong> ${message}</p>
+          ${fileName ? `<p><strong>Archivo adjunto:</strong> ${fileName}</p>` : ''}
         `,
-        attachments: [
-          {
-            filename: file.name,
-            content: file.content,
-            encoding: 'base64',
-          },
-        ],
+        attachments: fileName ? [{
+          filename: fileName,
+          content: formData[fileName],
+          encoding: 'base64',
+          contentType: fileType
+        }] : []
       };
 
       // Enviar el correo
-      await transporter.sendMail(mailOptions);
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          return reject({
+            statusCode: 500,
+            body: 'Error al enviar el correo.',
+          });
+        }
 
-      // Responder al cliente con un mensaje de éxito
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'Correo enviado correctamente' }),
-      };
-    } catch (error) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ message: 'Hubo un error al enviar el correo' }),
-      };
-    }
-  } else {
-    // Si no es un POST, se devuelve un 405 Method Not Allowed
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Método no permitido' }),
-    };
-  }
-};
-*/
-const nodemailer = require('nodemailer');
-const multiparty = require('multiparty');
-const fs = require('fs');
-
-exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Método no permitido.' }),
-    };
-  }
-
-  const form = new multiparty.Form();
-
-  return new Promise((resolve, reject) => {
-    form.parse(event, async (err, fields, files) => {
-      if (err) {
-        resolve({
-          statusCode: 500,
-          body: JSON.stringify({ message: 'Error al procesar el formulario.' }),
-        });
-        return;
-      }
-
-      // Extraer datos del formulario
-      const name = fields.name[0];
-      const email = fields.email[0];
-      const subject = fields.subject[0];
-      const message = fields.message[0];
-      const file = files.file ? files.file[0] : null;
-
-      // Configurar transporte de nodemailer
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'palmabenavidesa650@gmail.com',
-          pass: 'Adrian1821',
-        },
-      });
-
-      // Configurar opciones del correo
-      const mailOptions = {
-        from: email,
-        to: 'palmabenavidesa650@gmail.com',
-        subject: subject,
-        text: `
-          Nombre: ${name}
-          Correo: ${email}
-          Mensaje: ${message}
-        `,
-        attachments: file
-          ? [
-              {
-                filename: file.originalFilename,
-                content: fs.createReadStream(file.path),
-              },
-            ]
-          : [],
-      };
-
-      try {
-        await transporter.sendMail(mailOptions);
         resolve({
           statusCode: 200,
-          body: JSON.stringify({ success: true, message: 'Formulario enviado correctamente.' }),
+          body: 'Formulario enviado con éxito.',
         });
-      } catch (error) {
-        resolve({
-          statusCode: 500,
-          body: JSON.stringify({ success: false, message: 'Error al enviar el formulario.' }),
-        });
-      }
+      });
     });
+
+    busboy.end(event.body);
   });
 };

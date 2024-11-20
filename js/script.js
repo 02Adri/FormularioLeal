@@ -5,19 +5,14 @@ document.getElementById('contactForm').addEventListener('submit', async (event) 
   const formData = new FormData(form);
 
   try {
-    const response = await fetch('/functions/contact', {
+    const response = await fetch('/.netlify/functions/contact', {
       method: 'POST',
       body: formData,
     });
 
-    const result = await response.json();
-    const status = document.getElementById('status');
-    status.textContent = result.message;
-    status.style.color = result.success ? 'green' : 'red';
-
-    if (result.success) {
-      form.reset();
-    }
+    const result = await response.text();
+    document.getElementById('status').textContent = result;
+    form.reset();
   } catch (error) {
     document.getElementById('status').textContent = 'Error al enviar el formulario.';
   }
