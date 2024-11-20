@@ -1,8 +1,8 @@
 // Importar nodemailer (ES Modules)
 import nodemailer from 'nodemailer';
 // Importar Busboy (con wrapper para evitar problemas)
-import pkg from 'busboy';
-const Busboy = pkg.default || pkg;
+import * as Busboy from 'busboy';
+
 
 export const handler = async (event, context) => {
   return new Promise((resolve, reject) => {
@@ -18,7 +18,7 @@ export const handler = async (event, context) => {
       : event.body;
 
     // Crear instancia de Busboy
-    const busboy = new Busboy({ headers: event.headers });
+    const busboy = new Busboy ({ headers: event.headers });
     const formData = {};
     let fileBuffer = [];
     let fileName, fileType;
