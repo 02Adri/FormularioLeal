@@ -1,6 +1,7 @@
-const nodemailer = require('nodemailer');
+//const nodemailer = require('nodemailer');
 //const Busboy = require('busboy');
 const { Readable } = require('stream');
+import nodemailer from 'nodemailer'
 import Busboy from 'busboy';
 // Configurar el transporte de correo con Nodemailer
 const transporter = nodemailer.createTransport({
@@ -10,7 +11,7 @@ const transporter = nodemailer.createTransport({
     pass: 'Adrian1821',
   },
 });
-
+ 
 // Función Netlify
 exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
