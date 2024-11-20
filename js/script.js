@@ -5,7 +5,7 @@ document.getElementById('contactForm').addEventListener('submit', async (event) 
   const formData = new FormData(form);
 
   try {
-    const response = await fetch('/contact', {
+    const response = await fetch('/functions/contact', {
       method: 'POST',
       body: formData,
     });
