@@ -1,7 +1,8 @@
 [functions]
-  directory = "netlify/functions"
+  functions = "/netlify/functions"  # Ruta donde se encuentran las funciones
+
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from = "/*"
+  to = "/public/index.html"
   status = 200
