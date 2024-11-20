@@ -1,4 +1,4 @@
-const Busboy =require('busboy');  // Importar busboy
+const formidable =require('formidable');  // Importar formidable
 const nodemailer = require('nodemailer');
 
 export const handler = async (event, context) => {
@@ -15,36 +15,22 @@ export const handler = async (event, context) => {
       ? Buffer.from(event.body, 'base64').toString('binary')
       : event.body;
 
-    // Crear la instancia de Busboy correctamente
-    const busboy = new Busboy({ headers: event.headers });
+    // Configuración de formidable
+    const form = new formidable.IncomingForm();
+    form.parse(event, (err, fields, files) => {
+      if (err) {
+        console.error('Error al procesar el formulario:', err);
+        return reject({
+          statusCode: 500,
+          body: 'Error al procesar el formulario.',
+        });
+      }
 
-    const formData = {};
-    let fileBuffer = [];
-    let fileName, fileType;
+      // Extraer los datos del formulario
+      const { name, email, subject, message } = fields;
+      const file = files.file; // El archivo que se sube
 
-    // Procesar los campos del formulario
-    busboy.on('field', (fieldname, val) => {
-      formData[fieldname] = val;
-    });
-
-    // Procesar los archivos cargados
-    busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-      fileName = filename;
-      fileType = mimetype;
-
-      file.on('data', (data) => {
-        fileBuffer.push(data);
-      });
-
-      file.on('end', () => {
-        formData.file = Buffer.concat(fileBuffer);
-      });
-    });
-
-    // Una vez que se haya procesado el formulario
-    busboy.on('finish', () => {
-      const { name, email, subject, message } = formData;
-
+      // Configuración de Nodemailer
       const mailOptions = {
         from: email,
         to: 'palmabenavidesa650@gmail.com',
@@ -56,12 +42,12 @@ export const handler = async (event, context) => {
           <p><strong>Asunto:</strong> ${subject}</p>
           <p><strong>Mensaje:</strong> ${message}</p>
         `,
-        attachments: fileName
+        attachments: file
           ? [
               {
-                filename: fileName,
-                content: formData.file,
-                contentType: fileType,
+                filename: file.originalFilename,
+                content: file.filepath, // Utilizando la ruta temporal del archivo
+                contentType: file.mimetype,
               },
             ]
           : [],
@@ -92,8 +78,5 @@ export const handler = async (event, context) => {
         });
       });
     });
-
-    // Iniciar el procesamiento con busboy
-    busboy.end(body);
   });
 };
