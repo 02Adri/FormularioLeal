@@ -3,8 +3,8 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
-const busboy=require('busboy');
-const busboy = require('busboy');
+
+const Busboy = require('busboy');
 
 
 // Configurar el transporte de correo con Nodemailer (Asegúrate de poner tu SMTP real)
@@ -26,7 +26,7 @@ exports.handler = async (event, context) => {
       });
     }
 
-    const busboy =busboy({ headers: event.headers });
+    const busboy =Busboy({ headers: event.headers });
     let formData = {};
     let fileBuffer;
     
