@@ -1,5 +1,8 @@
+// Importar nodemailer (ES Modules)
 import nodemailer from 'nodemailer';
-import Busboy from 'busboy';
+// Importar Busboy (con wrapper para evitar problemas)
+import pkg from 'busboy';
+const Busboy = pkg.default || pkg;
 
 export const handler = async (event, context) => {
   return new Promise((resolve, reject) => {
@@ -10,23 +13,20 @@ export const handler = async (event, context) => {
       });
     }
 
-    // Manejar el cuerpo base64 si es necesario
     const body = event.isBase64Encoded
-      ? Buffer.from(event.body, 'base64')
+      ? Buffer.from(event.body, 'base64').toString('binary')
       : event.body;
 
-    // Instanciar Busboy
+    // Crear instancia de Busboy
     const busboy = new Busboy({ headers: event.headers });
     const formData = {};
     let fileBuffer = [];
     let fileName, fileType;
 
-    // Procesar campos de formulario
     busboy.on('field', (fieldname, val) => {
       formData[fieldname] = val;
     });
 
-    // Procesar archivos
     busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
       fileName = filename;
       fileType = mimetype;
@@ -40,11 +40,9 @@ export const handler = async (event, context) => {
       });
     });
 
-    // Finalizar procesamiento
     busboy.on('finish', () => {
       const { name, email, subject, message } = formData;
 
-      // Opciones de correo
       const mailOptions = {
         from: email,
         to: 'palmabenavidesa650@gmail.com',
@@ -67,16 +65,14 @@ export const handler = async (event, context) => {
           : [],
       };
 
-      // Configurar transporte de correo
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
           user: 'palmabenavidesa650@gmail.com',
-          pass: 'Adrian1821', // Usa variables de entorno para mayor seguridad
+          pass: 'Adrian1821', // Usar variables de entorno en producción
         },
       });
 
-      // Enviar correo
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.error('Error al enviar correo:', error);
@@ -93,7 +89,6 @@ export const handler = async (event, context) => {
       });
     });
 
-    // Pasar cuerpo a Busboy
     busboy.end(body);
   });
 };
