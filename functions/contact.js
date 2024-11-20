@@ -18,7 +18,7 @@ export const handler = async (event, context) => {
       : event.body;
 
     // Crear instancia de Busboy
-    const busboy = new Busboy ({ headers: event.headers });
+    const busboy =  Busboy ({ headers: event.headers });
     const formData = {};
     let fileBuffer = [];
     let fileName, fileType;
