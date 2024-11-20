@@ -3,6 +3,7 @@ const Busboy = require('busboy'); // Asegúrate de usar esta importación correc
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
+const busboy = require('busboy');
 
 // Configurar el transporte de correo con Nodemailer (Asegúrate de poner tu SMTP real)
 const transporter = nodemailer.createTransport({
@@ -23,7 +24,7 @@ exports.handler = async (event, context) => {
       });
     }
 
-    const busboy = new Busboy({ headers: event.headers });
+    const busboy = busboy({ headers: event.headers });
     let formData = {};
     let fileBuffer;
     
