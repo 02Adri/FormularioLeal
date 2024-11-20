@@ -27,6 +27,13 @@ exports.handler = async function(event, context) {
           <p><strong>Asunto:</strong> ${subject}</p>
           <p><strong>Mensaje:</strong> ${message}</p>
         `,
+        attachments: [
+          {
+            filename: file.name,
+            content: file.content,
+            encoding: 'base64',
+          },
+        ],
       };
 
       // Enviar el correo
