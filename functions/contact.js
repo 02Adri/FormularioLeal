@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const querystring = require('querystring'); // Para decodificar datos si es necesario
 
-export const handler = async (event) => {
+export   const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -52,7 +52,7 @@ export const handler = async (event) => {
   });
 
   // Enviar el correo
-  try {
+   try {
     await transporter.sendMail(mailOptions);
     return {
       statusCode: 200,
