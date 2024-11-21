@@ -1,5 +1,8 @@
 [build]
   functions = "functions"
+  [functions]
+node_bundler = "esbuild" # o "webpack" si prefieres
+node_version = "16"      # O la versión soportada por Netlify
 
 [[redirects]]
   from = "/contact"
