@@ -62,7 +62,7 @@ export const handler = async (event) => {
     console.error('Error al enviar correo:', error);
     return {
       statusCode: 500,
-      body: 'Error al enviar el correo.',
+      body: 'Error al enviar el correo .',
     };
   }
 };
