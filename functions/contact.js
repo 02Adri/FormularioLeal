@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require ('nodemailer');
 const querystring = require('querystring'); // Para decodificar datos si es necesario
 
 export   const handler = async (event) => {
