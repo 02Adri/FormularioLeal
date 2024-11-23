@@ -25,7 +25,7 @@ document.getElementById('contactForm').addEventListener('submit', async (event) 
     fileType: file ? file.type : null,
   };
 
-  const response = await fetch('/.netlify/functions/contact', {
+  const response = await fetch('/functions/contact', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
