@@ -4,16 +4,37 @@ document.getElementById('contactForm').addEventListener('submit', async (event) 
   const form = event.target;
   const formData = new FormData(form);
 
-  try {
-    const response = await fetch('/.netlify/functions/contact', {
-      method: 'POST',
-      body: formData,
-    });
+  const file = formData.get('file');
+  let base64File = null;
 
-    const result = await response.text();
-    document.getElementById('status').textContent = result;
-    form.reset();
-  } catch (error) {
-    document.getElementById('status').textContent = 'Error al enviar el formulario.';
+  if (file) {
+    base64File = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  const data = {
+    name: formData.get('name'),
+    email: formData.get('email'),
+    subject: formData.get('subject'),
+    message: formData.get('message'),
+    file: base64File,
+    fileName: file ? file.name : null,
+    fileType: file ? file.type : null,
+  };
+
+  const response = await fetch('/.netlify/functions/contact', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+
+  const result = await response.json();
+  if (response.ok) {
+    alert('Formulario enviado con éxito.');
+  } else {
+    alert(`Error: ${result.error}`);
   }
 });
