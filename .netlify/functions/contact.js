@@ -1,6 +1,6 @@
 const sendgrid = require('@sendgrid/mail');
 
-sendgrid.setApiKey('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'); // Reemplaza con tu clave API de SendGrid
+sendgrid.setApiKey('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'); // Reemplaza con tu clave API de SendGrid
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
