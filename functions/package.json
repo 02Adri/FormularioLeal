@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nodemailer": "^6.9.16"
+
   },
   "devDependencies": {
     "esbuild": "^0.24.0"
