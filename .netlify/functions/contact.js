@@ -173,10 +173,10 @@ exports.handler = async function(event, context) {
       attachments: file
         ? [
             {
-              content: file, // Contenido en base64 del archivo
+              content: Buffer.from(file,'base64'), // Contenido en base64 del archivo
               filename: fileName, // Nombre del archivo
               type: fileType, // Tipo MIME
-              disposition: 'attachment',
+              //disposition: 'attachment',
             },
           ]
         : [],
