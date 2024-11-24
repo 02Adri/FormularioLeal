@@ -60,11 +60,16 @@ exports.handler = async (event) => {
   }
 };*/
 
-const sgMail = require('@sendgrid/mail'); // Asegúrate de instalar @sendgrid/mail
+const sgMail = require('@sendgrid/mail');
+
+// Verificar que la clave API esté definida
+if (!process.env.SENDGRID_API_KEY) {
+  throw new Error("SENDGRID_API_KEY no está definida en las variables de entorno.");
+}
+
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.handler = async (event) => {
-  // Validar método HTTP
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -78,10 +83,18 @@ exports.handler = async (event) => {
 
     const { name, email, subject, message, file, fileName, fileType } = data;
 
+    // Validar que el correo del remitente esté bien definido y sea válido
+    if (!email || !subject || !message) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Faltan campos obligatorios.' }),
+      };
+    }
+
     // Configurar el correo
     const mailOptions = {
       to: 'palmabenavidesa650@gmail.com', // Receptor
-      from: email, // Remitente (dinámico)
+      from: email, // Remitente (dinámico, debe estar verificado)
       subject: `Nuevo mensaje de contacto: ${subject}`,
       html: `
         <h2>Nuevo mensaje del formulario de contacto</h2>
@@ -119,4 +132,3 @@ exports.handler = async (event) => {
     };
   }
 };
-
