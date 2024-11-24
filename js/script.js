@@ -1,6 +1,7 @@
 const form = document.getElementById('contactForm');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      
       const formData = new FormData(form);
       const file = formData.get('file');
       //const reader = new FileReader();
@@ -24,6 +25,7 @@ const form = document.getElementById('contactForm');
 
         const result = await response.json();
         alert(result.message || result.error);
+         form.reset()
       //};
       }catch(error){
         console.error(error)
