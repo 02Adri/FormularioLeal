@@ -1,7 +1,7 @@
 const sendgrid = process.env.SENDGRID_API_KEY
 //sendgrid.setApiKey('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'); // Reemplaza con tu clave API de SendGrid
 //process.env.SENDGRID_API_KEY
-sendgrid
+//sendgrid
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return {
