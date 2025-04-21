@@ -18,7 +18,7 @@ const form = document.getElementById('contactForm');
         };
        
         try{
-        const response = await fetch('/.netlify/functions/contact', {
+        const response = await fetch('/functions/contact', {
           method: 'POST',
           body: JSON.stringify(data),
         });
