@@ -16,11 +16,13 @@ const form = document.getElementById('contactForm');
           fileName: file?.name || null,
           fileType:file?.type || null,
         };
-       
+       //Detectar entorno
+       const isNetlify=window.location.hostname.includes('netlify.app')
+       const Api_URL=isNetlify?'/.netlify/functions/contact':'http://localhost:3001/api/contact'
         try{
-        const response = await fetch('/functions/contact', {
+        const response = await fetch(Api_URL, {
           method: 'POST',
-          body: JSON.stringify(data),
+          body: formData,
         });
 
         const result = await response.json();
