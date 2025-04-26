@@ -18,7 +18,7 @@ const form = document.getElementById('contactForm');
         };
        //Detectar entorno
        const isNetlify=window.location.hostname.includes('netlify.app')
-       const Api_URL=isNetlify?'/.netlify/functions/contact':'http://localhost:3001/api/contact'
+       const Api_URL=isNetlify?'/.netlify/functions/contact':'http:/formularioleal.onrender.com/api/contact'
         try{
           
         const response = await fetch(Api_URL, {
