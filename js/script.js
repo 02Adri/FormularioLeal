@@ -21,11 +21,17 @@ const form = document.getElementById('contactForm');
        const Api_URL=isNetlify?'/.netlify/functions/contact':'http:/formularioleal.onrender.com/api/contact'
         try{
           
-        const response = await fetch(Api_URL, {
+        const response = await fetch('http:/formularioleal.onrender.com/api/contact', {
           method: 'POST',
           body: formData,
         });
-
+          //incluimos response.ok
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Server responded with an error:', errorText);
+            alert('Error al enviar el mensaje: ' + response.status);
+            return;
+          }
         const result = await response.json();
         alert(result.message || result.error);
          form.reset()
